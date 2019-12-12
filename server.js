@@ -7,8 +7,10 @@ const MOVIEDEX = require('./movies-data.json')
 
 
 const app = express()
+const morganSetting = process.env.NODE_ENV === 'production'
+  ? 'tiny' : 'common'
 
-app.use(morgan('dev'))
+app.use(morgan('morganSetting'))
 app.use(helmet())
 app.use(cors())
 
@@ -40,12 +42,23 @@ app.get('/movies', function handleGetMovies(req, res) {
       )
     
   }
-
   res.json(result)
 })
 
-app.listen(8001, () => {
-  console.log('server listening at port 8001')
+app.use((error, req, res, next) => {
+  let response
+  if (process.env.NODE_ENV === 'production') {
+    response = { error: { message: 'server error' }}
+  } else {
+    response = { error }
+  }
+  res.status(500).json(response)
+})
+
+const PORT = process.env.PORT || 8000
+
+app.listen(PORT, () => {
+  console.log(`server listening at http://localhost:${PORT}`)
 })
 
 
