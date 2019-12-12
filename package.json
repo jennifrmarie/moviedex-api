@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon app",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "predeploy": "npm audit",
+    "deploy": "git push heroku master"
   },
   "keywords": [],
   "engines": {
